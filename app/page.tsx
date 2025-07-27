@@ -67,7 +67,6 @@ export default function HomePage() {
               />
               <GameControls
                 gameStatus={gameState.gameStatus}
-                difficulty={difficulty}
                 onNewGame={handleStartGame}
                 onPause={togglePause}
                 isGameActive={isGameActive}
@@ -125,6 +124,7 @@ export default function HomePage() {
           <WinModal
             isOpen={true}
             gameData={gameSessionData}
+            difficulty={difficulty}
             onNewGame={handleResetGame}
             onChangeDifficulty={(newDifficulty) => {
               setDifficulty(newDifficulty)
