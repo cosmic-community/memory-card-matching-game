@@ -8,7 +8,7 @@
   }
   
   body {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     min-height: 100vh;
   }
 }
@@ -44,11 +44,11 @@
   }
   
   .bg-gradient-game {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   }
   
   .bg-card-back {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
   }
   
   .selection-none {

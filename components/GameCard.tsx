@@ -22,8 +22,8 @@ export default function GameCard({ card, onClick, isClickable }: GameCardProps) 
       className={`
         relative w-full aspect-square rounded-lg border-2 transition-all duration-300 transform
         ${card.isFlipped || card.isMatched
-          ? 'bg-white border-blue-500 shadow-lg'
-          : 'bg-blue-600 border-blue-700 hover:bg-blue-500 shadow-md'
+          ? 'bg-white border-green-500 shadow-lg'
+          : 'bg-green-600 border-green-700 hover:bg-green-500 shadow-md'
         }
         ${card.isMatched
           ? 'animate-pulse ring-2 ring-green-500 ring-opacity-50'
@@ -34,7 +34,7 @@ export default function GameCard({ card, onClick, isClickable }: GameCardProps) 
           : 'cursor-default'
         }
         disabled:cursor-not-allowed
-        focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
+        focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50
       `}
     >
       {/* Card back */}
