@@ -1,13 +1,14 @@
 'use client'
 
-import { GameSessionData, Difficulty } from '@/types'
-import { formatTime, getDifficultyDisplayName } from '@/lib/gameLogic'
+import { Difficulty, GameSessionData } from '@/types'
+import { getDifficultyDisplayName } from '@/lib/gameLogic'
 
 interface WinModalProps {
   isOpen: boolean
   gameData: GameSessionData
   onNewGame: () => void
   onChangeDifficulty: (difficulty: Difficulty) => void
+  difficulty?: Difficulty
 }
 
 export default function WinModal({
@@ -15,110 +16,93 @@ export default function WinModal({
   gameData,
   onNewGame,
   onChangeDifficulty,
+  difficulty
 }: WinModalProps) {
   if (!isOpen) return null
 
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60)
+    const remainingSeconds = seconds % 60
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+  }
+
+  const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert']
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-bounce-in">
-        {/* Header */}
+      <div className="bg-white rounded-xl p-8 max-w-md w-full shadow-2xl">
         <div className="text-center mb-6">
           <div className="text-6xl mb-4">🎉</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
             Congratulations!
           </h2>
+          <p className="text-gray-600">
+            You completed the {getDifficultyDisplayName(gameData.difficulty)} level!
+          </p>
+        </div>
+
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <div className="grid grid-cols-2 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-blue-600">
+                {gameData.moves}
+              </div>
+              <div className="text-sm text-gray-600">Moves</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-green-600">
+                {formatTime(gameData.time)}
+              </div>
+              <div className="text-sm text-gray-600">Time</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-purple-600">
+                {gameData.score}
+              </div>
+              <div className="text-sm text-gray-600">Score</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-orange-600">
+                {gameData.accuracy.toFixed(1)}%
+              </div>
+              <div className="text-sm text-gray-600">Accuracy</div>
+            </div>
+          </div>
+          
           {gameData.isNewRecord && (
-            <div className="inline-flex items-center px-3 py-1 bg-warning-100 text-warning-800 rounded-full text-sm font-medium">
-              🏆 New High Score!
+            <div className="mt-4 text-center">
+              <div className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-yellow-100 text-yellow-800">
+                🏆 New High Score!
+              </div>
             </div>
           )}
         </div>
 
-        {/* Game Statistics */}
-        <div className="space-y-4 mb-6">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Difficulty:</span>
-            <span className="font-semibold">
-              {getDifficultyDisplayName(gameData.difficulty)}
-            </span>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Final Score:</span>
-            <span className="font-bold text-primary-600 text-lg">
-              {gameData.score}
-            </span>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Time:</span>
-            <span className="font-semibold">{formatTime(gameData.time)}</span>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Moves:</span>
-            <span className="font-semibold">{gameData.moves}</span>
-          </div>
-          
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600">Accuracy:</span>
-            <span className="font-semibold">{gameData.accuracy}%</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="space-y-3">
           <button
             onClick={onNewGame}
-            className="
-              flex-1 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg
-              transition-colors duration-200 shadow-md hover:shadow-lg
-              focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-50
-            "
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
           >
             Play Again
           </button>
           
-          <div className="flex gap-2">
-            {gameData.difficulty !== 'easy' && (
+          <div className="grid grid-cols-2 gap-3">
+            {difficulties.map((diff) => (
               <button
-                onClick={() => {
-                  const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert']
-                  const currentIndex = difficulties.indexOf(gameData.difficulty)
-                  const easierDifficulty = difficulties[currentIndex - 1]
-                  if (easierDifficulty) {
-                    onChangeDifficulty(easierDifficulty)
+                key={diff}
+                onClick={() => onChangeDifficulty(diff)}
+                className={`
+                  py-2 px-3 rounded-lg font-medium text-sm transition-colors duration-200
+                  ${diff === gameData.difficulty
+                    ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                   }
-                }}
-                className="
-                  px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg
-                  transition-colors duration-200
-                  focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50
-                "
+                `}
+                disabled={diff === gameData.difficulty}
               >
-                Easier
+                {getDifficultyDisplayName(diff)}
               </button>
-            )}
-            
-            {gameData.difficulty !== 'expert' && (
-              <button
-                onClick={() => {
-                  const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert']
-                  const currentIndex = difficulties.indexOf(gameData.difficulty)
-                  const harderDifficulty = difficulties[currentIndex + 1]
-                  if (harderDifficulty) {
-                    onChangeDifficulty(harderDifficulty)
-                  }
-                }}
-                className="
-                  px-4 py-3 bg-success-500 hover:bg-success-600 text-white font-medium rounded-lg
-                  transition-colors duration-200
-                  focus:outline-none focus:ring-2 focus:ring-success-400 focus:ring-opacity-50
-                "
-              >
-                Harder
-              </button>
-            )}
+            ))}
           </div>
         </div>
       </div>
