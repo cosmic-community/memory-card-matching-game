@@ -67,6 +67,7 @@ export default function HomePage() {
               />
               <GameControls
                 gameStatus={gameState.gameStatus}
+                difficulty={difficulty}
                 onNewGame={handleStartGame}
                 onPause={togglePause}
                 isGameActive={isGameActive}

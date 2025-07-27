@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react'
 import { HighScores, Difficulty } from '@/types'
 import { getHighScores, getDifficultyDisplayName } from '@/lib/gameLogic'
 
-export default function HighScoreDisplay() {
+interface HighScoreDisplayProps {
+  difficulty: Difficulty
+}
+
+export default function HighScoreDisplay({ difficulty }: HighScoreDisplayProps) {
   const [highScores, setHighScores] = useState<HighScores | null>(null)
 
   useEffect(() => {
