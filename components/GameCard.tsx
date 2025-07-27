@@ -22,19 +22,19 @@ export default function GameCard({ card, onClick, isClickable }: GameCardProps) 
       className={`
         relative w-full aspect-square rounded-lg border-2 transition-all duration-300 transform
         ${card.isFlipped || card.isMatched
-          ? 'bg-white border-primary-500 shadow-lg'
-          : 'bg-primary-600 border-primary-700 hover:bg-primary-500 shadow-md'
+          ? 'bg-white border-blue-500 shadow-lg'
+          : 'bg-blue-600 border-blue-700 hover:bg-blue-500 shadow-md'
         }
         ${card.isMatched
-          ? 'animate-match ring-2 ring-success-500 ring-opacity-50'
+          ? 'animate-pulse ring-2 ring-green-500 ring-opacity-50'
           : ''
         }
         ${isClickable && !card.isFlipped && !card.isMatched
-          ? 'hover:scale-105 cursor-pointer'
+          ? 'hover:scale-105 cursor-pointer hover:shadow-lg active:scale-95'
           : 'cursor-default'
         }
         disabled:cursor-not-allowed
-        focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-opacity-50
+        focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50
       `}
     >
       {/* Card back */}
@@ -51,7 +51,7 @@ export default function GameCard({ card, onClick, isClickable }: GameCardProps) 
       <div
         className={`
           absolute inset-0 flex items-center justify-center rounded-lg transition-all duration-300
-          ${card.isFlipped || card.isMatched ? 'opacity-100 animate-flip' : 'opacity-0'}
+          ${card.isFlipped || card.isMatched ? 'opacity-100 transform rotate-0' : 'opacity-0 transform rotate-180'}
         `}
       >
         <div className="text-3xl select-none">{card.symbol}</div>
@@ -59,7 +59,7 @@ export default function GameCard({ card, onClick, isClickable }: GameCardProps) 
 
       {/* Matched indicator */}
       {card.isMatched && (
-        <div className="absolute -top-1 -right-1 w-6 h-6 bg-success-500 rounded-full flex items-center justify-center animate-bounce-in">
+        <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center animate-bounce">
           <svg
             className="w-4 h-4 text-white"
             fill="currentColor"

@@ -13,9 +13,14 @@ import {
 } from '@/lib/gameLogic'
 
 export function useGameState(initialDifficulty: Difficulty = 'easy') {
-  const [gameState, setGameState] = useState<GameState>(() =>
-    createInitialGameState(initialDifficulty)
-  )
+  const [gameState, setGameState] = useState<GameState>(() => {
+    const initial = createInitialGameState(initialDifficulty)
+    // Ensure the game starts in a playing state so cards are clickable
+    return {
+      ...initial,
+      gameStatus: 'playing'
+    }
+  })
   const [gameTime, setGameTime] = useState<number>(0)
   const [isGameActive, setIsGameActive] = useState<boolean>(false)
 
@@ -38,7 +43,11 @@ export function useGameState(initialDifficulty: Difficulty = 'easy') {
 
   // Start a new game
   const startNewGame = useCallback((difficulty: Difficulty) => {
-    setGameState(createInitialGameState(difficulty))
+    const newState = createInitialGameState(difficulty)
+    setGameState({
+      ...newState,
+      gameStatus: 'playing' // Ensure new games start in playing state
+    })
     setGameTime(0)
     setIsGameActive(false)
   }, [])
@@ -58,11 +67,16 @@ export function useGameState(initialDifficulty: Difficulty = 'easy') {
   // Flip a card
   const flipCard = useCallback((cardId: number) => {
     setGameState((prevState) => {
-      // Don't allow flipping if game is won or if card is already flipped/matched
+      // Don't allow flipping if game is won
       if (prevState.gameStatus === 'won') return prevState
 
       const cardToFlip = prevState.cards.find((card) => card.id === cardId)
       if (!cardToFlip || cardToFlip.isFlipped || cardToFlip.isMatched) {
+        return prevState
+      }
+
+      // Don't allow more than 2 cards to be flipped at once
+      if (prevState.flippedCards.length >= 2) {
         return prevState
       }
 

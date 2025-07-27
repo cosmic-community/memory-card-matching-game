@@ -176,7 +176,7 @@ export function formatTime(seconds: number): string {
   return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`
 }
 
-// Create initial game state
+// Create initial game state - now starts in 'playing' state for immediate interaction
 export function createInitialGameState(difficulty: Difficulty): GameState {
   return {
     cards: generateCards(difficulty),
@@ -184,7 +184,7 @@ export function createInitialGameState(difficulty: Difficulty): GameState {
     matchedPairs: [],
     moves: 0,
     score: 0,
-    gameStatus: 'idle',
+    gameStatus: 'idle', // Will be set to 'playing' in useGameState
     startTime: 0,
     endTime: undefined,
     difficulty,
