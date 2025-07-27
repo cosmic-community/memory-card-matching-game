@@ -15,24 +15,22 @@ export default function HomePage() {
   const [gameStarted, setGameStarted] = useState(false)
   
   const {
-    cards,
-    flippedCards,
-    matchedCards,
-    moves,
-    timeElapsed,
-    gameWon,
-    startGame,
+    gameState,
+    gameTime,
+    isGameActive,
+    startNewGame,
     flipCard,
-    resetGame
+    togglePause,
+    getGameSessionData
   } = useGameState(difficulty)
 
   const handleStartGame = () => {
-    startGame()
+    startNewGame(difficulty)
     setGameStarted(true)
   }
 
   const handleResetGame = () => {
-    resetGame()
+    startNewGame(difficulty)
     setGameStarted(false)
   }
 
@@ -42,6 +40,8 @@ export default function HomePage() {
       handleResetGame()
     }
   }
+
+  const gameSessionData = getGameSessionData()
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4">
@@ -61,15 +61,16 @@ export default function HomePage() {
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">Game Settings</h2>
               <DifficultySelector
-                difficulty={difficulty}
+                selectedDifficulty={difficulty}
                 onDifficultyChange={handleDifficultyChange}
                 disabled={gameStarted}
               />
               <GameControls
-                onStartGame={handleStartGame}
-                onResetGame={handleResetGame}
-                gameStarted={gameStarted}
-                gameWon={gameWon}
+                gameStatus={gameState.gameStatus}
+                difficulty={difficulty}
+                onNewGame={handleStartGame}
+                onPause={togglePause}
+                isGameActive={isGameActive}
               />
             </div>
 
@@ -77,10 +78,8 @@ export default function HomePage() {
               <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
                 <h2 className="text-xl font-semibold mb-4 text-gray-800">Stats</h2>
                 <GameStats
-                  moves={moves}
-                  timeElapsed={timeElapsed}
-                  matchedPairs={matchedCards.length / 2}
-                  totalPairs={cards.length / 2}
+                  gameState={gameState}
+                  gameTime={gameTime}
                 />
               </div>
             )}
@@ -96,9 +95,7 @@ export default function HomePage() {
             <div className="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-xl">
               {gameStarted ? (
                 <GameBoard
-                  cards={cards}
-                  flippedCards={flippedCards}
-                  matchedCards={matchedCards}
+                  gameState={gameState}
                   onCardClick={flipCard}
                 />
               ) : (
@@ -124,12 +121,15 @@ export default function HomePage() {
         </div>
 
         {/* Win Modal */}
-        {gameWon && (
+        {gameState.gameStatus === 'won' && gameSessionData && (
           <WinModal
-            moves={moves}
-            timeElapsed={timeElapsed}
-            difficulty={difficulty}
-            onPlayAgain={handleResetGame}
+            isOpen={true}
+            gameData={gameSessionData}
+            onNewGame={handleResetGame}
+            onChangeDifficulty={(newDifficulty) => {
+              setDifficulty(newDifficulty)
+              handleResetGame()
+            }}
           />
         )}
       </div>
