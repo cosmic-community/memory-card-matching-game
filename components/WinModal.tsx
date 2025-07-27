@@ -86,7 +86,9 @@ export default function WinModal({
                   const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert']
                   const currentIndex = difficulties.indexOf(gameData.difficulty)
                   const easierDifficulty = difficulties[currentIndex - 1]
-                  onChangeDifficulty(easierDifficulty)
+                  if (easierDifficulty) {
+                    onChangeDifficulty(easierDifficulty)
+                  }
                 }}
                 className="
                   px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg
@@ -104,7 +106,9 @@ export default function WinModal({
                   const difficulties: Difficulty[] = ['easy', 'medium', 'hard', 'expert']
                   const currentIndex = difficulties.indexOf(gameData.difficulty)
                   const harderDifficulty = difficulties[currentIndex + 1]
-                  onChangeDifficulty(harderDifficulty)
+                  if (harderDifficulty) {
+                    onChangeDifficulty(harderDifficulty)
+                  }
                 }}
                 className="
                   px-4 py-3 bg-success-500 hover:bg-success-600 text-white font-medium rounded-lg

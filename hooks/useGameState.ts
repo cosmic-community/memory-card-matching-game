@@ -78,11 +78,11 @@ export function useGameState(initialDifficulty: Difficulty = 'easy') {
         card.id === cardId ? { ...card, isFlipped: true } : card
       )
 
-      let newGameState = {
+      let newGameState: GameState = {
         ...prevState,
         cards: newCards,
         flippedCards: newFlippedCards,
-        gameStatus: 'playing' as const,
+        gameStatus: 'playing',
         startTime: prevState.startTime || Date.now(),
         moves: prevState.moves + 1,
       }
